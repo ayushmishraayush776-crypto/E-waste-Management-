@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}E-Waste Management System{% endblock %}</title>
+    {% load static %}
+    {% load profile_extras %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Navigation Header -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-gradient">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="{% url 'home' %}">
+                <i class="fas fa-recycle"></i> E-Waste Hub
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'home' %}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'about' %}">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'how_it_works' %}">How It Works</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'facilities' %}">Facilities</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'contact' %}">Contact</a>
+                    </li>
+                    {% if user.is_authenticated %}
+                        {% if user|is_company %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'company_dashboard' %}">Dashboard</a>
+                        </li>
+                        {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
+                        </li>
+                        {% endif %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'login' %}">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link btn btn-primary text-white ms-2" href="{% url 'signup' %}">Sign Up</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Messages -->
+    {% if messages %}
+        <div class="container mt-3">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- Main Content -->
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white mt-5 py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <h5><i class="fas fa-recycle"></i> E-Waste Hub</h5>
+                    <p>Responsible e-waste disposal for a sustainable future.</p>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="{% url 'home' %}" class="text-decoration-none text-white-50">Home</a></li>
+                        <li><a href="{% url 'about' %}" class="text-decoration-none text-white-50">About Us</a></li>
+                        <li><a href="{% url 'facilities' %}" class="text-decoration-none text-white-50">Facilities</a></li>
+                        <li><a href="{% url 'contact' %}" class="text-decoration-none text-white-50">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <h5>Contact Info</h5>
+                    <p>Email: work.harsh363@gmail.com<br>
+                    Phone: +91 6386360684,+91 7052511051,+91 7300081587,+91 7701903457,+91 8404832404<br>
+                    Address: IPEC GHAZIABAD, SHAHIBABAD, 201010</p>
+                </div>
+            </div>
+            <hr class="bg-white-50">
+            <div class="text-center">
+                <p class="mb-0">&copy; 2026 E-Waste Management System. All rights reserved. | Made with <i class="fas fa-heart text-danger"></i> for the environment</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

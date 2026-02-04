@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}Recycling Facilities - E-Waste Hub{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="mb-4">Recycling Facilities</h1>
+    
+    {% if facilities %}
+        <div class="row">
+            {% for facility in facilities %}
+                <div class="col-md-6 mb-4">
+                    <div class="card facility-card">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <i class="fas fa-warehouse text-primary"></i> {{ facility.name }}
+                            </h5>
+                            <hr>
+                            <p>
+                                <strong><i class="fas fa-map-marker-alt"></i> Address:</strong><br>
+                                {{ facility.address }}
+                            </p>
+                            <p>
+                                <strong><i class="fas fa-phone"></i> Phone:</strong><br>
+                                <a href="tel:{{ facility.phone }}">{{ facility.phone }}</a>
+                            </p>
+                            <p>
+                                <strong><i class="fas fa-envelope"></i> Email:</strong><br>
+                                <a href="mailto:{{ facility.email }}">{{ facility.email }}</a>
+                            </p>
+                            <p>
+                                <strong><i class="fas fa-clock"></i> Hours:</strong><br>
+                                {{ facility.operating_hours }}
+                            </p>
+                            <p>
+                                <strong><i class="fas fa-boxes"></i> Accepts:</strong><br>
+                                {{ facility.accepted_items }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i> No recycling facilities available at the moment. Please check back soon!
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

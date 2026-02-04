@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+
+{% block title %}Report E-Waste - E-Waste Hub{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="fas fa-plus-circle"></i> Report E-Waste Item</h4>
+                </div>
+                <div class="card-body p-4">
+                    <p class="text-muted">Fill out the form below to report your electronic waste for pickup.</p>
+                    
+                    <form method="POST">
+                        {% csrf_token %}
+                        
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger">
+                                {{ form.non_field_errors }}
+                            </div>
+                        {% endif %}
+                        
+                        <div class="mb-3">
+                            <label for="category" class="form-label">Category *</label>
+                            {{ form.category }}
+                            {% if form.category.errors %}
+                                <div class="text-danger">{{ form.category.errors }}</div>
+                            {% endif %}
+                            <small class="text-muted">Select the category that best describes your item</small>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="item_name" class="form-label">Item Name *</label>
+                            {{ form.item_name }}
+                            {% if form.item_name.errors %}
+                                <div class="text-danger">{{ form.item_name.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description *</label>
+                            {{ form.description }}
+                            {% if form.description.errors %}
+                                <div class="text-danger">{{ form.description.errors }}</div>
+                            {% endif %}
+                            <small class="text-muted">Provide details about the item (brand, model, year, etc.)</small>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="condition" class="form-label">Condition *</label>
+                                    {{ form.condition }}
+                                    {% if form.condition.errors %}
+                                        <div class="text-danger">{{ form.condition.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="quantity" class="form-label">Quantity *</label>
+                                    {{ form.quantity }}
+                                    {% if form.quantity.errors %}
+                                        <div class="text-danger">{{ form.quantity.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="pickup_location" class="form-label">Pickup Location *</label>
+                            {{ form.pickup_location }}
+                            {% if form.pickup_location.errors %}
+                                <div class="text-danger">{{ form.pickup_location.errors }}</div>
+                            {% endif %}
+                            <small class="text-muted">Provide complete address for pickup</small>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="preferred_date" class="form-label">Preferred Pickup Date *</label>
+                                    {{ form.preferred_date }}
+                                    {% if form.preferred_date.errors %}
+                                        <div class="text-danger">{{ form.preferred_date.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="contact_phone" class="form-label">Contact Phone *</label>
+                                    {{ form.contact_phone }}
+                                    {% if form.contact_phone.errors %}
+                                        <div class="text-danger">{{ form.contact_phone.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-paper-plane"></i> Submit Report
+                            </button>
+                            <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Information Card -->
+            <div class="card mt-4 bg-light">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-lightbulb text-warning"></i> Helpful Tips</h5>
+                    <ul class="mb-0">
+                        <li>Provide accurate information about your items for better handling</li>
+                        <li>Ensure items are accessible for pickup</li>
+                        <li>Our team will confirm your pickup appointment within 24 hours</li>
+                        <li>Pickup is completely free - no hidden charges</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

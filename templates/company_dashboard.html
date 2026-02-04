@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %}Company Dashboard - E-Waste Hub{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h2 class="mb-4">Company Dashboard</h2>
+    <p class="text-muted">Below are all e-waste submissions by customers.</p>
+
+    <div class="row mb-3">
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-header">
+                    <strong>Customers</strong>
+                </div>
+                <div class="list-group list-group-flush">
+                    {% for c in customers %}
+                        <a href="?user={{ c.id }}" class="list-group-item list-group-item-action {% if selected_user == c.id %}active{% endif %}">
+                            {{ c.username }} <span class="badge bg-secondary float-end">{{ c.items_count }}</span>
+                        </a>
+                    {% endfor %}
+                    <a href="{% url 'company_dashboard' %}" class="list-group-item list-group-item-action mt-2">Show All</a>
+                </div>
+            </div>
+            <div class="mt-2 text-center">
+                <a href="{% url 'user_list' %}" class="btn btn-sm btn-outline-primary">Manage Users</a>
+            </div>
+        </div>
+        <div class="col-md-9">
+            {% if items %}
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Category</th>
+                            <th>Item</th>
+                            <th>Condition</th>
+                            <th>Quantity</th>
+                            <th>Pickup Location</th>
+                            <th>Preferred Date</th>
+                            <th>Contact</th>
+                            <th>Reported At</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for it in items %}
+                        <tr>
+                            <td><a href="{% url 'item_detail' it.id %}">{{ it.user.username }}</a></td>
+                            <td>{% if it.category %}{{ it.category.name }}{% else %}-{% endif %}</td>
+                            <td>{{ it.item_name }}</td>
+                            <td>{{ it.get_condition_display }}</td>
+                            <td>{{ it.quantity }}</td>
+                            <td>{{ it.pickup_location }}</td>
+                            <td>{{ it.preferred_date }}</td>
+                            <td>{{ it.contact_phone }}</td>
+                            <td>{{ it.created_at|date:"Y-m-d H:i" }}</td>
+                            <td>
+                                <a href="{% url 'item_detail' it.id %}" class="btn btn-sm btn-info">View</a>
+                                <a href="{% url 'edit_pickup' it.pickup_request.id %}" class="btn btn-sm btn-outline-secondary">Edit Pickup</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="alert alert-info">No e-waste submissions yet.</div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

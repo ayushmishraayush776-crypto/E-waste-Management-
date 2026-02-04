@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+
+{% block title %}Item Details - E-Waste Hub{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">{{ item.item_name }}</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h6 class="text-muted">Category</h6>
+                            <p>{% if item.category %}{{ item.category.name }}{% else %}-{% endif %}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-muted">Condition</h6>
+                            <p>
+                                <span class="badge bg-info">{{ item.get_condition_display }}</span>
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h6 class="text-muted">Quantity</h6>
+                            <p>{{ item.quantity }} unit(s)</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-muted">Status</h6>
+                            <p>
+                                {% if item.is_collected %}
+                                    <span class="badge bg-success">Collected</span>
+                                {% else %}
+                                    <span class="badge bg-warning">Pending</span>
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <hr>
+                    
+                    <h6 class="text-muted">Description</h6>
+                    <p>{{ item.description }}</p>
+                    
+                    <h6 class="text-muted">Pickup Location</h6>
+                    <p>{{ item.pickup_location }}</p>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6 class="text-muted">Preferred Pickup Date</h6>
+                            <p>{{ item.preferred_date|date:"M d, Y" }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-muted">Contact Phone</h6>
+                            <p>{{ item.contact_phone }}</p>
+                        </div>
+                    </div>
+                    
+                    <hr>
+                    
+                    <p class="text-muted small">
+                        Reported on: {{ item.created_at|date:"M d, Y at g:i A" }}<br>
+                        Last updated: {{ item.updated_at|date:"M d, Y at g:i A" }}
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            {% if pickup_request %}
+                <div class="card">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0">Pickup Request</h5>
+                    </div>
+                    <div class="card-body">
+                        <h6 class="text-muted">Status</h6>
+                        <p>
+                            {% if pickup_request.status == 'pending' %}
+                                <span class="badge bg-warning">{{ pickup_request.get_status_display }}</span>
+                                <small class="text-muted d-block mt-2">Your request is being reviewed. We'll schedule pickup within 24 hours.</small>
+                            {% elif pickup_request.status == 'scheduled' %}
+                                <span class="badge bg-info">{{ pickup_request.get_status_display }}</span>
+                            {% elif pickup_request.status == 'in_progress' %}
+                                <span class="badge bg-primary">{{ pickup_request.get_status_display }}</span>
+                                <small class="text-muted d-block mt-2">Your pickup is on the way!</small>
+                            {% elif pickup_request.status == 'completed' %}
+                                <span class="badge bg-success">{{ pickup_request.get_status_display }}</span>
+                                <small class="text-muted d-block mt-2">Thank you for contributing to a sustainable environment!</small>
+                            {% else %}
+                                <span class="badge bg-secondary">{{ pickup_request.get_status_display }}</span>
+                            {% endif %}
+                        </p>
+                        
+                        {% if pickup_request.scheduled_date %}
+                            <hr>
+                            <h6 class="text-muted">Scheduled Date</h6>
+                            <p>{{ pickup_request.scheduled_date|date:"M d, Y at g:i A" }}</p>
+                        {% endif %}
+                        
+                        {% if pickup_request.assigned_to %}
+                            <hr>
+                            <h6 class="text-muted">Assigned To</h6>
+                            <p>{{ pickup_request.assigned_to.get_full_name }}</p>
+                        {% endif %}
+                        
+                        {% if pickup_request.notes %}
+                            <hr>
+                            <h6 class="text-muted">Notes</h6>
+                            <p>{{ pickup_request.notes }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+            
+            <div class="card mt-3">
+                <div class="card-body">
+                    <a href="{% url 'my_items' %}" class="btn btn-outline-primary w-100">
+                        <i class="fas fa-arrow-left"></i> Back to Items
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

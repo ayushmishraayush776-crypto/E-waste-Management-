@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% load profile_extras %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container text-center">
+        <h1 class="display-3 fw-bold text-white mb-4">Welcome to E-Waste Hub</h1>
+        <p class="lead text-white mb-4">Responsible disposal. Sustainable future. Join the movement.</p>
+        {% if not user.is_authenticated %}
+            <a href="{% url 'signup' %}" class="btn btn-primary btn-lg">Get Started</a>
+            <a href="{% url 'about' %}" class="btn btn-outline-light btn-lg ms-2">Learn More</a>
+        {% else %}
+            {% if not user|is_company %}
+                <a href="{% url 'report_ewaste' %}" class="btn btn-primary btn-lg">Report E-Waste</a>
+            {% endif %}
+            <a href="{% url 'dashboard' %}" class="btn btn-outline-light btn-lg ms-2">My Dashboard</a>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Stats Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-4 mb-4">
+                <div class="stat-card">
+                    <i class="fas fa-mobile-alt fa-3x text-primary mb-3"></i>
+                    <h3>{{ total_items_collected }}</h3>
+                    <p>Items Collected</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="stat-card">
+                    <i class="fas fa-users fa-3x text-success mb-3"></i>
+                    <h3>{{ total_users }}</h3>
+                    <p>Active Users</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="stat-card">
+                    <i class="fas fa-warehouse fa-3x text-warning mb-3"></i>
+                    <h3>{{ total_categories }}</h3>
+                    <p>Categories</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">Why Choose E-Waste Hub?</h2>
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="feature-card">
+                    <i class="fas fa-shield-alt text-primary mb-3"></i>
+                    <h4>Safe & Secure</h4>
+                    <p>Your personal information is protected with industry-standard security.</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="feature-card">
+                    <i class="fas fa-truck text-success mb-3"></i>
+                    <h4>Free Pickup</h4>
+                    <p>Schedule free pickup from your location at your convenience.</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="feature-card">
+                    <i class="fas fa-leaf text-warning mb-3"></i>
+                    <h4>Eco-Friendly</h4>
+                    <p>Responsible recycling ensuring minimal environmental impact.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="bg-primary text-white py-5">
+    <div class="container text-center">
+        <h2 class="mb-4">Ready to make a difference?</h2>
+        <p class="mb-4">Help reduce e-waste and contribute to a sustainable planet.</p>
+        {% if not user.is_authenticated %}
+            <a href="{% url 'signup' %}" class="btn btn-light btn-lg">Join Now</a>
+        {% else %}
+            {% if not user|is_company %}
+                <a href="{% url 'report_ewaste' %}" class="btn btn-light btn-lg">Report E-Waste</a>
+            {% endif %}
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

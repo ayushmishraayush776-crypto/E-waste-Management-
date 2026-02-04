@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Pickups - E-Waste Hub{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="mb-4">Manage Pickup Requests</h1>
+    
+    {% if pickups %}
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Item</th>
+                        <th>User</th>
+                        <th>Status</th>
+                        <th>Scheduled Date</th>
+                        <th>Assigned To</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for pickup in pickups %}
+                        <tr>
+                            <td><strong>{{ pickup.ewaste_item.item_name }}</strong></td>
+                            <td>{{ pickup.ewaste_item.user.get_full_name }}</td>
+                            <td>
+                                <span class="badge bg-{% if pickup.status == 'pending' %}warning{% elif pickup.status == 'scheduled' %}info{% elif pickup.status == 'completed' %}success{% else %}secondary{% endif %}">
+                                    {{ pickup.get_status_display }}
+                                </span>
+                            </td>
+                            <td>
+                                {% if pickup.scheduled_date %}
+                                    {{ pickup.scheduled_date|date:"M d, Y" }}
+                                {% else %}
+                                    <span class="text-muted">-</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if pickup.assigned_to %}
+                                    {{ pickup.assigned_to.get_full_name }}
+                                {% else %}
+                                    <span class="text-muted">Unassigned</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{% url 'edit_pickup' pickup.id %}" class="btn btn-sm btn-outline-secondary me-1">Edit</a>
+                                {% if pickup.status == 'pending' %}
+                                    <form method="POST" class="d-inline">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="pickup_id" value="{{ pickup.id }}">
+                                        <button type="submit" name="action" value="accept" class="btn btn-sm btn-success">
+                                            Accept
+                                        </button>
+                                    </form>
+                                    <form method="POST" class="d-inline ms-1">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="pickup_id" value="{{ pickup.id }}">
+                                        <button type="submit" name="action" value="cancel" class="btn btn-sm btn-danger">
+                                            Cancel
+                                        </button>
+                                    </form>
+                                {% elif pickup.status == 'scheduled' %}
+                                    <form method="POST" class="d-inline">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="pickup_id" value="{{ pickup.id }}">
+                                        <button type="submit" name="action" value="start" class="btn btn-sm btn-warning">
+                                            Start Pickup
+                                        </button>
+                                    </form>
+                                    <form method="POST" class="d-inline ms-1">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="pickup_id" value="{{ pickup.id }}">
+                                        <button type="submit" name="action" value="complete" class="btn btn-sm btn-primary">
+                                            Mark Complete
+                                        </button>
+                                    </form>
+                                {% else %}
+                                    <span class="text-muted">No action</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i> No pickup requests found.
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

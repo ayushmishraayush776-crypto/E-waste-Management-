@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load profile_extras %}
+
+{% block title %}My Items - E-Waste Hub{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1>My E-Waste Items</h1>
+            <p class="text-muted">Track and manage all your reported items</p>
+        </div>
+        <div class="col-md-4 text-end">
+            {% if not user|is_company %}
+            <a href="{% url 'report_ewaste' %}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Report New Item
+            </a>
+            {% endif %}
+        </div>
+    </div>
+    
+    {% if user_items %}
+        <div class="row">
+            {% for item in user_items %}
+                <div class="col-md-6 mb-4">
+                    <div class="card item-card h-100">
+                        <div class="card-header bg-light">
+                            <h5 class="mb-0">{{ item.item_name }}</h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="mb-2">
+                                <strong>Category:</strong> 
+                                {% if item.category %}{{ item.category.name }}{% else %}<span class="text-muted">-</span>{% endif %}
+                            </p>
+                            <p class="mb-2">
+                                <strong>Condition:</strong> 
+                                <span class="badge bg-info">{{ item.get_condition_display }}</span>
+                            </p>
+                            <p class="mb-2">
+                                <strong>Quantity:</strong> {{ item.quantity }} unit(s)
+                            </p>
+                            <p class="mb-2">
+                                <strong>Pickup Location:</strong> {{ item.pickup_location }}
+                            </p>
+                            <p class="mb-2">
+                                <strong>Status:</strong>
+                                {% with pr=item.pickup_request %}
+                                    {% if pr %}
+                                        {% if pr.status == 'pending' %}
+                                            <span class="badge bg-warning">Pending</span>
+                                        {% elif pr.status == 'scheduled' %}
+                                            <span class="badge bg-info">Scheduled</span>
+                                        {% elif pr.status == 'in_progress' %}
+                                            <span class="badge bg-warning">In Progress</span>
+                                        {% elif pr.status == 'completed' %}
+                                            <span class="badge bg-success">Collected</span>
+                                        {% elif pr.status == 'cancelled' %}
+                                            <span class="badge bg-secondary">Cancelled</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">{{ pr.get_status_display }}</span>
+                                        {% endif %}
+                                    {% else %}
+                                        {% if item.is_collected %}
+                                            <span class="badge bg-success">Collected</span>
+                                        {% else %}
+                                            <span class="badge bg-warning">Pending</span>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endwith %}
+                            </p>
+                            <p class="mb-0">
+                                <small class="text-muted">Reported on {{ item.created_at|date:"M d, Y at g:i A" }}</small>
+                            </p>
+                        </div>
+                        <div class="card-footer">
+                            <a href="{% url 'item_detail' item.id %}" class="btn btn-sm btn-primary">
+                                <i class="fas fa-eye"></i> View Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info alert-lg">
+            <i class="fas fa-info-circle"></i>
+            <strong>No items reported yet!</strong><br>
+            Start by reporting your first e-waste item. {% if not user|is_company %}<a href="{% url 'report_ewaste' %}">Report now</a>{% endif %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
